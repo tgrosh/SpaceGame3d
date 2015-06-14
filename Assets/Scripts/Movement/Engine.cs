@@ -19,23 +19,26 @@ public class Engine : MonoBehaviour {
 	// Update is called once per frame
 	void LateUpdate () {
 		if (enginesOn) {
-			if (!exhaustFX.isPlaying && !silent){
+			if (exhaustFX != null && !exhaustFX.isPlaying && !silent){
 				exhaustFX.Play();
 			}
 			if (!thrustSound.isPlaying && !silent) {
 				thrustSound.Play();
 			}
 		} else {
-			exhaustFX.Stop();
+			if (exhaustFX != null) {
+				exhaustFX.Stop();
+			}
 			thrustSound.Stop();
 		}
 
 		enginesOn = false; //assume not on
+		silent = false; //assume not silent
 	}
 
 	public void Accelerate (float thrust, ForceMode forceMode) {
 		enginesOn = true;
-		body.AddForce (body.transform.forward * ((thrust) * acceleration), forceMode);
+		body.AddForce (transform.forward * ((thrust) * acceleration), forceMode);
 	}
 
 	public void Accelerate (float thrust)

@@ -68,7 +68,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 183358}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -48.1599998}
+  m_LocalPosition: {x: 0, y: -1.04999995, z: -48.1599998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 485310}
@@ -96,7 +96,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 1407e7e9db5ea094181ab03e3558c3f3, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 50e1ec1db0fb7974292961b83d144309, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thrustSound: {fileID: 8286422}
   body: {fileID: 0}
-  acceleration: 4000
+  acceleration: 2000
   exhaustFX: {fileID: 19882758}
 --- !u!198 &19882758
 ParticleSystem:

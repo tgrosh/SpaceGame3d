@@ -11,6 +11,7 @@ public class SpacePhysicsMovement : MonoBehaviour {
 	public float pitchSpeed = .2f;
 	public float yawSpeed = .2f;
 	public Engine[] forwardEngines;
+	public Engine[] reverseEngines;
 
 	float forwardThrust = 0f;
 	float reverseThrust = 0f;
@@ -49,10 +50,14 @@ public class SpacePhysicsMovement : MonoBehaviour {
 
 		if (forwardThrust > 0f) {
 			foreach (Engine engine in forwardEngines) {
-				forwardEngines[0].Accelerate(forwardThrust);
+				engine.Accelerate(forwardThrust);
 			}
 		}
-		//body.AddForce(transform.forward * ((forwardThrust - reverseThrust) * acceleration));
+		if (reverseThrust > 0f) {
+			foreach (Engine engine in reverseEngines) {
+				engine.Accelerate(reverseThrust);
+			}
+		}
 		body.AddTorque(transform.forward * -rollThrust * rollSpeed);
 		body.AddTorque(transform.right * pitchThrust * pitchSpeed);
 		body.AddTorque(transform.up * yaw * yawSpeed);
@@ -83,38 +88,23 @@ public class SpacePhysicsMovement : MonoBehaviour {
 
 	
 	public void Accelerate (float thrust, ForceMode forceMode) {
-		body.AddForce (transform.forward * ((thrust) * acceleration), forceMode);
-
-		if (!enginesOn && !silent){
-			thrustSound.Play();
-			enginesOn = true;
-		}
-		
-		if (forwardThrust > 0) {
-			foreach(ParticleSystem exhaustFX in rearExhaustPortsFX){
-				exhaustFX.startSpeed = 25f + (((1f + forwardThrust)/2f) * 125f);
-				if (!exhaustFX.isPlaying && !silent){
-					exhaustFX.Play();
-				}
-			}
-		} else {
-			foreach(ParticleSystem exhaustFX in rearExhaustPortsFX){
-				if (!exhaustFX.isStopped && !silent){
-					exhaustFX.Stop();
-				}
-			}
+		foreach (Engine engine in forwardEngines) {
+			engine.Accelerate(thrust, forceMode);
 		}
 	}
 	public void Accelerate (float thrust)
 	{
 		manualForce = true;
-		Accelerate(thrust, ForceMode.Force);
+		foreach (Engine engine in forwardEngines) {
+			engine.Accelerate(thrust);
+		}
 	}
 
 	public void Push (float force)
 	{
-		silent = true;
-		Accelerate(force, ForceMode.Impulse);
+		foreach (Engine engine in forwardEngines) {
+			engine.Push(force);
+		}
 	}
 	
 	public void Roll (float rollThrust)
@@ -128,22 +118,23 @@ public class SpacePhysicsMovement : MonoBehaviour {
 	}
 	
 	public void Stop() {
-		body.velocity = Vector3.Lerp (body.velocity, new Vector3(0f,0f,0f), Time.deltaTime);
-		enginesOn = false;
 		manualForce = false;
-		thrustSound.Stop();
+		foreach (Engine engine in forwardEngines) {
+			engine.Stop();
+		}
 	}
 
 	public void Halt() {
-		body.velocity = new Vector3(0f,0f,0f);
-		enginesOn = false;		
 		manualForce = false;
-		thrustSound.Stop();
+		foreach (Engine engine in forwardEngines) {
+			engine.Halt();
+		}
 	}
 
 	public void Hyperjump(float thrust){
-		silent = true;
 		manualForce = true;
-		Accelerate(thrust, ForceMode.Force);
+		foreach (Engine engine in forwardEngines) {
+			engine.Hyperjump(thrust);
+		}
 	}
 }
