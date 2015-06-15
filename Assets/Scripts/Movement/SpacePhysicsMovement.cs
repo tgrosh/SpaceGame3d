@@ -52,30 +52,24 @@ public class SpacePhysicsMovement : MonoBehaviour {
 			foreach (Engine engine in forwardEngines) {
 				engine.Accelerate(forwardThrust);
 			}
+		} else {
+			foreach (Engine engine in forwardEngines) {
+				engine.Off();
+			}
 		}
 		if (reverseThrust > 0f) {
 			foreach (Engine engine in reverseEngines) {
 				engine.Accelerate(reverseThrust);
 			}
+		} else {
+			foreach (Engine engine in reverseEngines) {
+				engine.Off();
+			}
 		}
+
 		body.AddTorque(transform.forward * -rollThrust * rollSpeed);
 		body.AddTorque(transform.right * pitchThrust * pitchSpeed);
 		body.AddTorque(transform.up * yaw * yawSpeed);
-
-		if (reverseThrust > -1f) {
-			foreach(ParticleSystem exhaustFX in frontExhaustPortsFX){
-				exhaustFX.startSpeed = 7f + (1f + reverseThrust * 20f);
-				if (!exhaustFX.isPlaying && !silent){
-					exhaustFX.Play();
-				}
-			}
-		} else {
-			foreach(ParticleSystem exhaustFX in frontExhaustPortsFX){
-				if (!exhaustFX.isStopped && !silent){
-					exhaustFX.Stop();
-				}
-			}
-		}
 	}
 
 	public float getCurrentSpeed() {

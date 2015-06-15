@@ -11,6 +11,9 @@ public class Engine : MonoBehaviour {
 	bool enginesOn = false;
 	bool silent = false;
 
+	float currentThrust;
+	ForceMode currentForceMode;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -32,8 +35,16 @@ public class Engine : MonoBehaviour {
 			thrustSound.Stop();
 		}
 
-		enginesOn = false; //assume not on
 		silent = false; //assume not silent
+	}
+
+	public Engine On() {
+		enginesOn = true;
+		return this;
+	}
+
+	public void Off() {
+		enginesOn = false;
 	}
 
 	public void Accelerate (float thrust, ForceMode forceMode) {
