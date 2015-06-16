@@ -9,7 +9,7 @@ public class Intro : MonoBehaviour {
 	public Vector3 rotationOffset;
 	public GameObject hyperspaceEntrance;
 	public Camera defaultCamera;
-	public GameObject gui;
+	public Canvas guiCanvas;
 
 	GameObject playerShip;
 	Transform playerShipCamTarget;
@@ -41,6 +41,8 @@ public class Intro : MonoBehaviour {
 		playerShipCamTarget = playerShip.transform.FindChild("CameraTarget").transform;
 		hyperDrive = playerShip.GetComponent<Hyperdrive>();
 
+		guiCanvas = GameObject.Find ("GUI").GetComponent<Canvas>();
+
 		transform.position = introPoints[currentIntroPoint].transform.position + positionOffset;
 		transform.rotation = Quaternion.Euler(introPoints[currentIntroPoint].transform.rotation.eulerAngles + rotationOffset);
 	}
@@ -60,7 +62,7 @@ public class Intro : MonoBehaviour {
 				cam.m_MoveSpeed = 3f;
 				cam.SetTarget(playerShipCamTarget);
 			} else {
-				gui.SetActive(true);
+				guiCanvas.enabled = true;
 				defaultCamera.gameObject.SetActive(true);
 				defaultCamera.enabled = true;
 				cam.enabled = false;

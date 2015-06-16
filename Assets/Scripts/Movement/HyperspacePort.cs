@@ -5,6 +5,8 @@ public class HyperspacePort : MonoBehaviour {
 
 	LensFlare hyperspaceLensFlare;
 	AudioSource portAudio;
+	GameObject player;
+	Billboard billboard;
 
 	float targetIntensity = 1f;
 	float portLightFadeInSpeed = 20f;
@@ -17,6 +19,9 @@ public class HyperspacePort : MonoBehaviour {
 		hyperspaceLensFlare = GetComponent<LensFlare>();
 		portAudio = GetComponent<AudioSource>();
 		portLightSpeed = portLightFadeInSpeed;
+		billboard = GetComponent<Billboard>();
+
+		player = GameObject.FindWithTag("Player");
 	}
 
 	void LateUpdate () {
@@ -30,12 +35,11 @@ public class HyperspacePort : MonoBehaviour {
 				gameObject.SetActive(false);
 			}
 		}
-	}
 
-	void OnTriggerEnter(Collider collider) {
-		if (collider.gameObject.CompareTag("Player")){
+		if (Vector3.Distance(transform.position, player.transform.position) < 1500f){
 			showLensFlare = true;
 			portAudio.enabled = true;
+			billboard.enabled = false;
 		}
 	}
 }

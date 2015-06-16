@@ -22,7 +22,7 @@ public class Hyperdrive : MonoBehaviour {
 	float hyperSpaceAlignRate = 1f;
 	float alignTime = 0f;
 	bool atPort;
-	GameObject gui;
+	Canvas guiCanvas;
 	float targetIntensity = 1f;
 	float portLightFadeInSpeed = 20f;
 	float portLightFadeOutSpeed = 1f;
@@ -40,7 +40,7 @@ public class Hyperdrive : MonoBehaviour {
 		trail = transform.FindChild("Trail").gameObject;
 		trailRend = trail.GetComponent<TrailRenderer>();
 		mover = GetComponent<SpacePhysicsMovement>();
-		gui = GameObject.Find ("GUI");
+		guiCanvas = GameObject.Find ("GUI").GetComponent<Canvas>();
 		portLightSpeed = portLightFadeInSpeed;
 	}
 	
@@ -124,10 +124,11 @@ public class Hyperdrive : MonoBehaviour {
 		if (alignTime > 5f && !atPort) {
 			originalCamera.gameObject.SetActive(false);
 			originalCamera.enabled = false;	
-			gui.SetActive(false);	
+			guiCanvas.enabled = false;
 			hyperdriveCamera.gameObject.SetActive(true);
 			hyperdriveCamera.enabled = true;
 			hyperdriveCamera.transform.parent = null;
+			transform.rotation = Quaternion.LookRotation(port.position - transform.position);
 			mover.Hyperjump(500f);
 			trail.SetActive(true);
 
@@ -137,25 +138,11 @@ public class Hyperdrive : MonoBehaviour {
 			}
 		} 
 
-		if (atPort && !inHyperspace) {
-			hyperdriveCamera.transform.FindChild("HyperdrivePortReached").GetComponent<AudioSource>().enabled = true;
-
-			LensFlare light = port.GetComponent<LensFlare>();
-
-			light.brightness = Mathf.Lerp(light.brightness, targetIntensity, Time.deltaTime * portLightSpeed);
-
-			if (light.brightness > .9f) {
-				targetIntensity = 0f;
-				portLightSpeed = portLightFadeOutSpeed;
-			}
-		}
-
 		if (!atPort) {
 			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(port.position - transform.position), hyperSpaceAlignRate * Time.deltaTime);			
 			alignTime += Time.deltaTime;
 		} else {
 			trail.SetActive(false);
 		}
-
 	}
 }
